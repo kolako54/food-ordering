@@ -1,6 +1,7 @@
 import connectDb from "../../../utils/connectDb.js";
 import Product from "@/models/product.js";
-export default async (req, res) => {
+// eslint-disable-next-line import/no-anonymous-default-export
+export default async function(req, res) {
   connectDb();
   const { method } = req;
   if (method === "GET") {
