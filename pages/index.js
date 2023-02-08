@@ -4,6 +4,7 @@ import Featured from "../components/Featured";
 import PizzaList from "../components/PizzaList";
 import styles from "../styles/Home.module.css";
 export default function Home({pizzaList}) {
+  console.log('ajabz')
   return (  <div className={styles.container}>
       <Head>
         <title>Pizza Restaurant in Newyork</title>
@@ -15,11 +16,22 @@ export default function Home({pizzaList}) {
     </div>
   );
 }
-export const getServerSideProps = async () => {
-  const res = await axios.get('http://localhost:3000/api/products')
-  return {
-    props: {
-      pizzaList: res.data
+export async function getServerSideProps() {
+  console.log('sdfsfsdfdfsfdsfsdfsfdfsfafsfsdfsdfsdf')
+    const res = await axios.get('http://localhost:3000/api/products')
+    console.log(res.data)
+    return {
+      props: {
+        pizzaList: res.data
+      }
     }
-  }
 }
+// export const getServerSideProps = async () => {
+//   const res = await axios.get("http://localhost:3000/api/products");
+//   console.log(res.data, 'hhhooooffffffff')
+//   return {
+//     props: {
+//       pizzaList: res.data,
+//     },
+//   };
+// };

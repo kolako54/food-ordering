@@ -6,9 +6,12 @@ export default async function(req, res) {
   const { method } = req;
   if (method === "GET") {
     try {
+      console.log('haha')
       const getAllProducts = await Product.find();
+      console.log('fuck you', getAllProducts)
       res.status(200).json(getAllProducts);
     } catch (err) {
+      console.log('ajabaaaa')
       res.status(500).json(err);
     }
   }
