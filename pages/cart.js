@@ -1,11 +1,15 @@
 import styles from "../styles/Cart.module.css";
 import Image from "next/image";
 import {useDispatch, useSelector} from 'react-redux'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import {useRouter} from "next/router";
+import axios from 'axios'
+import { reset } from "@/redux/cartSlice";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart)
   const [checkout, setCheckout] = useState(false);
+  const router = useRouter();
   const dispatch = useDispatch()
   const [alertInput, setAlertInput] = useState([])
   const [details, setDetails] = useState({
@@ -22,11 +26,19 @@ const Cart = () => {
     setDetails(prev => ({...prev, [name]: value}))
 
   }
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!details.method || !details.status || !details.address || !details.total || !details.customer) {
         setAlertInput('fill all the inputs')
     } else {
       setAlertInput('')
+      try {
+        const order = await axios.post('http://localhost:3000/api/order', details);
+        dispatch(reset())
+        order.status === 201 && router.push(`/order/${order.data._id}`);
+      } catch (err) {
+        console.log(err);
+      }
+
     }
   }
   return (
@@ -115,11 +127,12 @@ const Cart = () => {
               <label for="methodval">method</label>
               <input name="method" type="number" id="methodval" style={{ width: '15em' }} onChange={handleChange} />
               </div>
-        <button className={styles.button} onClick={handleClick}> CHECKOUT NOW!</button>
+          <button className={styles.button} onClick={handleClick}> CHECKOUT NOW!</button>
+                <h4 style={{textAlign: 'center', color: '#b7903c', margin: '10px 0'}}>{alertInput}</h4>
+
           </div>
 
       </div>
-      <h4>{alertInput}</h4>
     </div>
   );
 };

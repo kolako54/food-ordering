@@ -1,21 +1,22 @@
 import connectDb from "../../../utils/connectDb.js";
-import Product from "@/models/product.js";
+import Orders from "@/models/Order.js";
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async function(req, res) {
   connectDb();
   const { method } = req;
   if (method === "GET") {
     try {
-      const getAllProducts = await Product.find();
-      res.status(200).json(getAllProducts);
+      const getAllOrder = await Orders.find();
+      res.status(200).json(getAllOrder);
     } catch (err) {
       res.status(500).json(err);
     }
   }
   if (method === "POST") {
     try {
-      const product = await Product.create(req.body);
-      res.status(200).json(product);
+      const Order = await Orders.create(req.body);
+      console.log(Order.data)
+      res.status(201).json(Order);
     } catch (err) {
       res.status(500).json(err);
     }
