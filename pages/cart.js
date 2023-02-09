@@ -1,10 +1,34 @@
 import styles from "../styles/Cart.module.css";
 import Image from "next/image";
 import {useDispatch, useSelector} from 'react-redux'
+import { useState, useEffect } from 'react';
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart)
+  const [checkout, setCheckout] = useState(false);
   const dispatch = useDispatch()
+  const [alertInput, setAlertInput] = useState([])
+  const [details, setDetails] = useState({
+    method: '',
+    status: '',
+    address: '',
+    total: '',
+    customer: ''
+  })
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value
+    setDetails(prev => ({...prev, [name]: value}))
+
+  }
+  const handleClick = () => {
+    if (!details.method || !details.status || !details.address || !details.total || !details.customer) {
+        setAlertInput('fill all the inputs')
+    } else {
+      setAlertInput('')
+    }
+  }
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -36,7 +60,7 @@ const Cart = () => {
             <td>
               <span className={styles.extras}>
                   {
-                    product.extras.map((extra) => (
+                    product.extra.map((extra) => (
                       <span key={extra._id}>{extra.text}, </span>
                     ))
                 }
@@ -56,20 +80,46 @@ const Cart = () => {
         </table>
       </div>
       <div className={styles.right}>
-        <div className={styles.wrapper}>
-          <h2 className={styles.title}>CART TOTAL</h2>
-          <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Subtotal:</b>${cart.total}
+        { !checkout &&
+          <div className={styles.wrapper}>
+            <h2 className={styles.title}>CART TOTAL</h2>
+            <div className={styles.totalText}>
+              <b className={styles.totalTextTitle}>Subtotal:</b>${cart.total}
+            </div>
+            <div className={styles.totalText}>
+              <b className={styles.totalTextTitle}>Discount:</b>$0.00
+            </div>
+            <div className={styles.totalText}>
+              <b className={styles.totalTextTitle}>Total:</b>${cart.total}
+            </div>
           </div>
-          <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Discount:</b>$0.00
+        }
+          <div className={styles.wrapper}>
+            <div className={styles.add} style={{display: 'flex', justifyContent: 'space-around', margin: '10px'}}>
+              <label for="customer">customer</label>
+              <input type="text" id="customer" name="customer" style={{ width: '15em' }} onChange={handleChange} />
+            </div>
+            <div className={styles.add} style={{display: 'flex', justifyContent: 'space-around', margin: '10px'}}>
+              <label for="address">address</label>
+              <input type="text" id="address" name="address" onChange={handleChange} style={{width: '15em'}}/>
+            </div>
+            <div className={styles.add} style={{display: 'flex', justifyContent: 'space-around', margin: '10px'}}>
+              <label for="total">total</label>
+              <input type="number" name="total" id="total" style={{ width: '15em' }} onChange={handleChange} />
+            </div>
+            <div className={styles.add} style={{display: 'flex', justifyContent: 'space-around', margin: '10px'}}>
+              <label for="status">status</label>
+              <input name="status" type="number" id="status" style={{ width: '15em' }} onChange={handleChange} />
+            </div>
+            <div className={styles.add} style={{display: 'flex', justifyContent: 'space-around', margin: '10px'}}>
+              <label for="methodval">method</label>
+              <input name="method" type="number" id="methodval" style={{ width: '15em' }} onChange={handleChange} />
+              </div>
+        <button className={styles.button} onClick={handleClick}> CHECKOUT NOW!</button>
           </div>
-          <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Total:</b>${cart.total}
-          </div>
-          <button className={styles.button}>CHECKOUT NOW!</button>
-        </div>
+
       </div>
+      <h4>{alertInput}</h4>
     </div>
   );
 };
